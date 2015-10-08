@@ -1,3 +1,11 @@
+/**
+ * Supposed to be called from ./builddata.sh
+ * Parses 01.most-dependent-upon.md file and dumps json object to console:
+ * {
+ *   date:  date when the file was generated
+ *   packages: hash dictionary with key being a package name, value - number of dependents
+ * }
+ */
 var path = require('path');
 var fs = require('fs');
 var fileName = path.join(__dirname, '8e8fa57c7ee1350e3491', '01.most-dependent-upon.md');
@@ -12,6 +20,7 @@ var metrics = {
 
 content.forEach(parseLine);
 console.log(JSON.stringify(metrics));
+return;
 
 function parseLine(line) {
   if (line[0] === '*') {
