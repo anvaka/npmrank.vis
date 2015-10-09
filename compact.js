@@ -18,7 +18,18 @@ var result = {
   packages: packages
 };
 
-console.log(JSON.stringify(result));
+var d = result.dates.map(function(x) {
+  x = new Date(x);
+  return x.getFullYear() + '-' + (x.getMonth() + 1) + '-' + x.getDate();
+});
+d.unshift('x');
+var arr = [d];
+Object.keys(result.packages).forEach(function(x, i) {
+  var pkg = result.packages[x];
+  pkg.unshift(x);
+  if (i < 10) arr.push(pkg);
+});
+console.log(arr, null, 2);
 
 function createPackages(inputFile, dates) {
   var totalValues = dates.array.length;
@@ -43,7 +54,11 @@ function createPackages(inputFile, dates) {
 }
 
 function createArray(count) {
-  return new Array(count).join('-').split('-');
+  return new Array(count).join('-').split('-').map(toEmpty);
+}
+
+function toEmpty(x) {
+  return '-';
 }
 
 function readDates(inputFile) {

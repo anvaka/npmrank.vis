@@ -4,7 +4,8 @@
   "description": "Visualization of changes from npmrank",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browserify --noparse=three index.js > bundle.js"
   },
   "keywords": [
     "npmrank",
@@ -15,5 +16,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/anvaka/npmrank.vis"
+  },
+  "dependencies": {
+    "three": "^0.72.0",
+    "three.fly": "^0.1.6"
+  },
+  "devDependencies": {
+    "browserify": "^11.2.0"
   }
 }

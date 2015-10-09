@@ -29,4 +29,4 @@ echo "];" >> $outfile
 cd ../
 
 # Finally compress the data into web-friendly format
-node compact.js > "data/compacted.js"
+node compact.js > "data/compacted.json"
