@@ -20,7 +20,7 @@ content=()
 for revision in $(git rev-list master)
 do
   git checkout $revision
-  content+=($(node ../collect.js))
+  content+=($(node ../build-data/collect.js))
 done
 
 # join JSON records with "," seperator
@@ -36,4 +36,4 @@ echo "];" >> $outfile
 cd ../
 
 # Finally compress the data into web-friendly format
-node compact.js > "data/compacted.json"
+node build-data/compact.js > "data/compacted.json"

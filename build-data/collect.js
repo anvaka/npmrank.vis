@@ -8,7 +8,7 @@
  */
 var path = require('path');
 var fs = require('fs');
-var fileName = path.join(__dirname, '8e8fa57c7ee1350e3491', '01.most-dependent-upon.md');
+var fileName = path.join(__dirname, '..', '8e8fa57c7ee1350e3491', '01.most-dependent-upon.md');
 if (!fs.existsSync(fileName)) {
   return;
 }

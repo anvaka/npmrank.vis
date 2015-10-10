@@ -8,7 +8,7 @@
  *     value is array of numbers. i-th number gives a value for the i-th date
  *   }
  */
-var inputFile = require('./data/points.js');
+var inputFile = require('../data/points.js');
 
 var dates = readDates(inputFile);
 var packages = createPackages(inputFile, dates);
