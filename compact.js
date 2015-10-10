@@ -18,18 +18,7 @@ var result = {
   packages: packages
 };
 
-var d = result.dates.map(function(x) {
-  x = new Date(x);
-  return x.getFullYear() + '-' + (x.getMonth() + 1) + '-' + x.getDate();
-});
-d.unshift('x');
-var arr = [d];
-Object.keys(result.packages).forEach(function(x, i) {
-  var pkg = result.packages[x];
-  pkg.unshift(x);
-  if (i < 10) arr.push(pkg);
-});
-console.log(arr, null, 2);
+console.log(JSON.stringify(result));
 
 function createPackages(inputFile, dates) {
   var totalValues = dates.array.length;
