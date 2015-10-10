@@ -18,6 +18,7 @@
     "url": "https://github.com/anvaka/npmrank.vis"
   },
   "dependencies": {
+    "ngraph.events": "0.0.3",
     "three": "^0.72.0",
     "three.fly": "^0.1.6"
   },
