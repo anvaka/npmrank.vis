@@ -1,5 +1,5 @@
 var THREE = require('three');
-var data = require('./data/compacted.json');
+var data = require('../data/compacted.js');
 var barPlane = require('./lib/bar-plane.js');
 var createScene = require('./lib/scene.js');
 

@@ -110,6 +110,7 @@ function getColor(value, min, max) {
   if (min === max) {
     return 0xcccccc;
   }
+  var h;
   if (value < 0) {
     // pick from 160 ... 240 spectrum of hue value
     var diff = value / min;

@@ -18,7 +18,7 @@ var result = {
   packages: packages
 };
 
-console.log(JSON.stringify(result));
+console.log('module.exports = ' + JSON.stringify(result) + ';');
 
 function createPackages(inputFile, dates) {
   var totalValues = dates.array.length;
@@ -47,7 +47,7 @@ function createArray(count) {
 }
 
 function toEmpty(x) {
-  return '-';
+  return '';
 }
 
 function readDates(inputFile) {

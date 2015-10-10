@@ -36,4 +36,4 @@ echo "];" >> $outfile
 cd ../
 
 # Finally compress the data into web-friendly format
-node build-data/compact.js > "data/compacted.json"
+node build-data/compact.js > "data/compacted.js"
