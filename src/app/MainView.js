@@ -5,7 +5,13 @@ import HoverDetails from './HoverDetails.js';
 
 export default createComponent(model => (
   <div>
-    <h2>{model.date}</h2>
-    <HoverDetails model={model.hovered} />
+    <h1>npm growth rate (top 1k packages)</h1>
+    {
+      model.showHelp ?
+        <span className='help'>Press spacebar to advance date</span> :
+      (
+        <HoverDetails model={model} />
+      )
+    }
   </div>
 ));
