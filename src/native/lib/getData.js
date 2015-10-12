@@ -89,7 +89,7 @@ function createDataAccess() {
         return;
       }
 
-      var diff = parseInt(currentValue, 10) - parseInt(prevValue, 10);
+      var diff = parseFloat(currentValue) - parseFloat(prevValue);
 
       changes.push({
         key: id,

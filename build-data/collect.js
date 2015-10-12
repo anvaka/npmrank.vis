@@ -38,7 +38,7 @@ function tryParseDate(line) {
 }
 
 function tryParseStat(line) {
-  var match = line.match(/^\d+\. \[(.+)\].+ - (\d+)$/);
+  var match = line.match(/^\d+\. \[(.+)\].+ - ([0-9.]+)$/);
   if (!match) return;
 
   metrics.packages[match[1]] = match[2];
