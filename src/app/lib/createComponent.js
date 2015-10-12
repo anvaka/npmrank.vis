@@ -11,11 +11,15 @@ function createComponent(factory) {
       if (!model || !typeof model.on === 'function') return;
 
       this.componentWillUnmount = function() {
-        model.off('change', onChange);
+        if (isActive(model)) {
+          model.off('change', onChange);
+        }
       };
 
       this.componentWillMount = function() {
-        model.on('change', onChange);
+        if (isActive(model)) {
+          model.on('change', onChange);
+        }
       };
 
       function onChange() {
@@ -29,4 +33,8 @@ function createComponent(factory) {
   }
 
   return CustomComponent;
+}
+
+function isActive(obj) {
+  return obj && typeof obj.on === 'function' && typeof obj.off === 'function';
 }

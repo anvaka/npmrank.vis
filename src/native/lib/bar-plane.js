@@ -1,67 +1,83 @@
 var THREE = require('three');
 var TWEEN = require('tween.js');
 var App = require('../../events/App.js');
+var data = require('./getData.js');
 
 var createHighlighter = require('./highlighter.js');
 
 module.exports = createPlane;
 
-function createPlane(scene, initialSlice) {
+function createPlane(scene) {
+  var lastChanges = data.getCurrentDateChanges();
+
+  // List of all three.js box meshes:
   var boxes = [];
+  // Maps three.js Object3D.id to the package index within current changes.
   var idToIndex = {};
-  var size = Math.ceil(Math.sqrt(initialSlice.length));
-  var squareMultiplier = 2;
-  var cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+  // We render each package within a square with side length equal to `size`
+  var size = Math.ceil(Math.sqrt(lastChanges.length));
 
+  // Each cube is padded by this value
+  var padding = 2;
+
+  // Each box share the same geometry. We use mesh.scale transform to change height value:
+  var boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+
+  // When user moves mouse we want to highlight hovered box:
   var highlight = createHighlighter(0xff0000);
-  var lastSlice;
-  initialize(initialSlice);
 
-  return {
-    render: render
+  initialize(lastChanges);
+
+  return; // Public API is over here.
+
+  function initialize(changes) {
+    addAllBoxes(changes);
+    centerCameraOnScene();
+
+    scene.on('mouseover', highlightOver);
+    App.on('dateChanged', updateChart);
   }
 
-  function initialize(slice) {
-    lastSlice = slice;
-    addAllBoxes(slice);
-    centerCameraOnScene();
-    scene.on('mouseover', highlightOver);
+  function updateChart(index) {
+    var changes = data.getCurrentDateChanges();
+    render(changes, index === 0);
   }
 
   function highlightOver(shape) {
-    var boxIndex = idToIndex[shape.id];
-    if (boxIndex === undefined) return; // probably not a box?
+    var packageIndex = idToIndex[shape.id];
+    if (packageIndex === undefined) return; // probably not a box?
+
     highlight(shape);
 
-    App.fire('hover', lastSlice[boxIndex]);
+    App.fire('hover', packageIndex);
   }
 
-  function addAllBoxes(slice) {
+  function addAllBoxes(changes) {
     var idx = 0;
-    var minMax = getMinMax(slice);
+    var minMax = getMinMax(changes);
 
-    for (var i = 0; i < slice.length; ++i) {
-      var value = slice[i].value;
+    for (var i = 0; i < changes.length; ++i) {
+      var value = changes[i].value;
       var color = getColor(value, minMax.min, minMax.max);
       addBox(i, value, color);
     }
   }
 
   function centerCameraOnScene() {
-    var half = size * squareMultiplier / 2;
+    var half = size * padding / 2;
     var camera = scene.three.camera;
     camera.position.x += half;
     camera.position.y += half;
-    var boxWidth = 2.15 * size * squareMultiplier;
+    var boxWidth = 2.15 * size * padding;
     camera.position.z = boxWidth / 2 / Math.tan(Math.PI * camera.fov / 360);
   }
 
-  function render(slice, reset) {
-    lastSlice = slice;
+  function render(changes, reset) {
+    lastChanges = changes;
 
-    var minMax = getMinMax(slice);
-    for (var i = 0; i < slice.length; ++i) {
-      var value = slice[i].value;
+    var minMax = getMinMax(changes);
+    for (var i = 0; i < changes.length; ++i) {
+      var value = changes[i].value;
       var attachedToScene = boxes[i].parent;
       if (value === 0 && attachedToScene && !reset) {
         scene.three.scene.remove(boxes[i]);
@@ -105,10 +121,10 @@ function createPlane(scene, initialSlice) {
       color: color
     });
 
-    var cube = new THREE.Mesh(cubeGeometry, material);
+    var cube = new THREE.Mesh(boxGeometry, material);
     height = height || 1;
     cube.scale.z = height;
-    cube.position.set(x * squareMultiplier, y * squareMultiplier, height / 2);
+    cube.position.set(x * padding, y * padding, height / 2);
     scene.three.scene.add(cube);
     boxes[i] = cube;
     idToIndex[cube.id] = i;
@@ -135,12 +151,12 @@ function getColor(value, min, max) {
   return color.getHex();
 }
 
-function getMinMax(slice) {
+function getMinMax(changes) {
   var min = Number.POSITIVE_INFINITY;
   var max = Number.NEGATIVE_INFINITY;
 
-  for (var i = 0; i < slice.length; ++i) {
-    var val = slice[i].value;
+  for (var i = 0; i < changes.length; ++i) {
+    var val = changes[i].value;
     if (val < min) min = val;
     if (val > max) max = val;
   }
@@ -152,15 +168,16 @@ function getMinMax(slice) {
 }
 
 function rainbow() {
-var arr = [0xFF0000,
-0xFF7F00,
-0xFFFF00,
-0xffffff,
-0x00FF00,
-0x0000FF,
-0x4B0082,
-0xffffff,
-0xffffff,
-0x8B00FF];
-return arr[Math.random() * arr.length | 0];
+  var arr = [0xFF0000,
+    0xFF7F00,
+    0xFFFF00,
+    0xffffff,
+    0x00FF00,
+    0x0000FF,
+    0x4B0082,
+    0xffffff,
+    0xffffff,
+    0x8B00FF
+  ];
+  return arr[Math.random() * arr.length | 0];
 }
