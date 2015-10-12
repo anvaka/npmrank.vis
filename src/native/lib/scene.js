@@ -64,7 +64,7 @@ function createScene() {
     requestAnimationFrame(render);
 
     hitTest();
-    controls.update(1);
+    controls.update(2);
     TWEEN.update(time);
     renderer.render(scene, camera);
   }

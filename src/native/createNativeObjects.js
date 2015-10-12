@@ -31,13 +31,15 @@ function createNativeObjects() {
 
   function advanceSlice(diff) {
     sliceIdx += diff;
+    var reset = false;
     if (sliceIdx >= data.dates.length) {
       sliceIdx = 0;
+      reset = true;
     } else if (sliceIdx < 0) {
       sliceIdx = data.dates.length - 1;
     }
     var slice = packages.getSliceAt(sliceIdx);
-    plane.render(slice);
+    plane.render(slice, reset);
 
     App.fire('dateChanged', data.dates[sliceIdx]);
   }

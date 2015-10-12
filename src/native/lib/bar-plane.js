@@ -56,12 +56,18 @@ function createPlane(scene, initialSlice) {
     camera.position.z = boxWidth / 2 / Math.tan(Math.PI * camera.fov / 360);
   }
 
-  function render(slice) {
+  function render(slice, reset) {
     lastSlice = slice;
 
     var minMax = getMinMax(slice);
     for (var i = 0; i < slice.length; ++i) {
       var value = slice[i].value;
+      var attachedToScene = boxes[i].parent;
+      if (value === 0 && attachedToScene && !reset) {
+        scene.three.scene.remove(boxes[i]);
+      } else if ((value !== 0 || reset) && !attachedToScene) {
+        scene.three.scene.add(boxes[i]);
+      }
       var color = getColor(value, minMax.min, minMax.max);
       updateBox(i, value, color);
     }
