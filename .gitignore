@@ -8,7 +8,7 @@ lib-cov
 *.gz
 8e8fa57c7ee1350e3491
 
-dist
+build
 pids
 logs
 results

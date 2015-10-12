@@ -1,5 +1,7 @@
 var THREE = require('three');
 var TWEEN = require('tween.js');
+var App = require('../../events/App.js');
+
 var createHighlighter = require('./highlighter.js');
 
 module.exports = createPlane;
@@ -9,6 +11,7 @@ function createPlane(scene, initialSlice) {
   var idToIndex = {};
   var size = Math.ceil(Math.sqrt(initialSlice.length));
   var squareMultiplier = 2;
+  var cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 
   var highlight = createHighlighter(0xff0000);
   var lastSlice;
@@ -29,8 +32,8 @@ function createPlane(scene, initialSlice) {
     var boxIndex = idToIndex[shape.id];
     if (boxIndex === undefined) return; // probably not a box?
     highlight(shape);
-    console.log(lastSlice[boxIndex].key);
-    // TODO: emit to the UI.
+
+    App.fire('hover', lastSlice[boxIndex]);
   }
 
   function addAllBoxes(slice) {
@@ -49,7 +52,7 @@ function createPlane(scene, initialSlice) {
     var camera = scene.three.camera;
     camera.position.x += half;
     camera.position.y += half;
-    var boxWidth = 1.15 * size * squareMultiplier;
+    var boxWidth = 2.15 * size * squareMultiplier;
     camera.position.z = boxWidth / 2 / Math.tan(Math.PI * camera.fov / 360);
   }
 
@@ -67,8 +70,8 @@ function createPlane(scene, initialSlice) {
   function updateBox(i, height, color) {
     height = height || 1;
     var cube = boxes[i];
-    // todo: size should be optional
     cube.material.color.setHex(color);
+
     var from = {
       scale: cube.scale.z,
       height: cube.position.z
@@ -92,11 +95,11 @@ function createPlane(scene, initialSlice) {
   function addBox(i, height, color) {
     var x = i % size;
     var y = (i / size) | 0;
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
     var material = new THREE.MeshBasicMaterial({
       color: color
     });
-    var cube = new THREE.Mesh(geometry, material);
+
+    var cube = new THREE.Mesh(cubeGeometry, material);
     height = height || 1;
     cube.scale.z = height;
     cube.position.set(x * squareMultiplier, y * squareMultiplier, height / 2);
@@ -110,6 +113,8 @@ function getColor(value, min, max) {
   if (min === max) {
     return 0xcccccc;
   }
+  if (value === 0) return 0x0;
+
   var h;
   if (value < 0) {
     // pick from 160 ... 240 spectrum of hue value
@@ -138,4 +143,18 @@ function getMinMax(slice) {
     min: min,
     max: max
   };
+}
+
+function rainbow() {
+var arr = [0xFF0000,
+0xFF7F00,
+0xFFFF00,
+0xffffff,
+0x00FF00,
+0x0000FF,
+0x4B0082,
+0xffffff,
+0xffffff,
+0x8B00FF];
+return arr[Math.random() * arr.length | 0];
 }

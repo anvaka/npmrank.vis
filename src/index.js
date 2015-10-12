@@ -1,25 +1,16 @@
-var THREE = require('three');
-var data = require('../data/compacted.js');
-var barPlane = require('./lib/bar-plane.js');
-var createScene = require('./lib/scene.js');
+// Native objects are created separately.
+import './styles/main.less';
 
-var scene = createScene();
-var packages = require('./lib/packages.js')(data.packages);
-var sliceIdx = 0;
-var firstSlice = packages.getSliceAt(sliceIdx);
-var plane = barPlane(scene, firstSlice);
+require('./native/createNativeObjects.js')();
 
-window.addEventListener('keydown', onKeyDown, false);
+// React components too:
+var React = require('react');
+var ReactDOM = require('react-dom');
 
-function onKeyDown(e) {
-  if (e.which === 32) {
-    if (e.shiftKey) {
-      if (sliceIdx === 0) sliceIdx = data.dates.length;
-      sliceIdx -= 1;
-    } else {
-      sliceIdx += 1;
-      if (sliceIdx >= data.dates.length) sliceIdx = 0
-    }
-    plane.render(packages.getSliceAt(sliceIdx));
-  }
-}
+var MainView = require('./app/MainView.js');
+var appViewModel = require('./app/mainViewModel.js');
+
+ReactDOM.render(
+  <MainView model={appViewModel} />,
+  document.getElementById('react-root')
+);

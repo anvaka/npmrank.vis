@@ -7,7 +7,7 @@ module.exports = createScene;
 
 function createScene() {
   var scene = new THREE.Scene();
-  var renderer = new THREE.WebGLRenderer();
+  var renderer = createRenderer();
   var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
   var raycaster = new THREE.Raycaster();
@@ -33,10 +33,16 @@ function createScene() {
 
   return api;
 
+  function createRenderer() {
+    var renderer = new THREE.WebGLRenderer();
+    var container = document.getElementById('three-root');
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+    return renderer;
+  }
+
   function listenToEvents() {
     controls.on('move', onCameraMove);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     window.addEventListener('resize', onWindowResize, false);
   }
