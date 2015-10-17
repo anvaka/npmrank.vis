@@ -17,7 +17,7 @@ fi
 # we will iterate over each revision and transform markdown into json format
 content=()
 
-for revision in $(git rev-list master)
+for revision in $(git rev-list origin/master)
 do
   git checkout $revision
   content+=($(node ../build-data/collect.js))
