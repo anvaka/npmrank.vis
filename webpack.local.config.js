@@ -12,7 +12,7 @@ module.exports = {
   port: port,
 
   // Efficiently evaluate modules with source maps
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'inline-source-map',
 
   // Set entry point to ./src/main and include necessary files for hot load
   entry: [

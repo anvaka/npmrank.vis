@@ -53,5 +53,5 @@ function formatNumber(x) {
 }
 
 function formatDate(x) {
-  return moment(x).format('MMMM Do YYYY');
+  return moment(x).format('dddd, MMMM Do YYYY');
 }
