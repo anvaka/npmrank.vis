@@ -27,7 +27,7 @@ function createScene() {
       camera: camera,
       renderer: renderer
     }
-  }
+  };
 
   eventify(api);
 

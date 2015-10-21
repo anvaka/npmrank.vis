@@ -25,7 +25,7 @@ function createDataAccess() {
 
   var dates = data.dates;
   var packages = data.packages;
-  var names = Object.keys(packages);
+  var names = Object.keys(packages).sort(byDepsCountOnFirstDay);
   var currentDateIdx = 0;
   var currentDate = getChangesForDate(currentDateIdx);
 
@@ -96,6 +96,19 @@ function createDataAccess() {
         value: diff
       });
     }
+  }
+
+  function byDepsCountOnFirstDay(x, y) {
+    var dayX = packages[x][0];
+    var dayY = packages[y][0];
+    if (dayX === '' && dayY !== '') {
+      return 1;
+    } else if (dayX !== '' && dayY === '') {
+      return -1;
+    } else if (dayX === dayY) {
+      return 0;
+    }
+    return parseFloat(dayY) - parseFloat(dayX);
   }
 }
 
