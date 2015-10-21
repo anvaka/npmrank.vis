@@ -1,13 +1,49 @@
 @import "~bootstrap/less/bootstrap";
 
 @secondary: #acacac;
+@foreground: white;
 
 h2 {
   color: @secondary;
 }
 
-.help {
+.help-space {
   color: white;
+  font-size: 24px;
+}
+
+.navigation-help {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.55);
+  padding: 7px;
+  right: 20px;
+  top: 7px;
+  font-family: 'Roboto', sans-serif;
+  h4 {
+    color: @foreground;
+    padding-bottom: 6px;
+    margin-top: 2px;
+  }
+  code {
+    font-family: 'PT Sans', sans-serif;
+    font-size: 100%;
+    color: @foreground;
+    background-color: inherit;
+  }
+  code.important-key {
+    color: #90EE90;
+  }
+  td {
+    color: #999;
+    text-align: right;
+  }
+  td:nth-child(even) {
+    text-align: left;
+
+  }
+  tr.spacer-row {
+    border-bottom: 10px solid transparent;
+  }
 }
 
 body {
