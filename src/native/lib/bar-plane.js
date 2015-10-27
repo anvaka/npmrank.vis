@@ -3,6 +3,7 @@ var TWEEN = require('tween.js');
 var App = require('../../events/App.js');
 var data = require('./getData.js');
 
+var createAudioEgg = require('./audio.js');
 var createHighlighter = require('./highlighter.js');
 
 module.exports = createPlane;
@@ -28,19 +29,68 @@ function createPlane(scene) {
 
   initialize(lastChanges);
 
+  // Easter egg: Drop audio file.
+  var isAudioReady = false;
+  var audio = createAudioEgg();
+  var kittenThere = false;
+  audio.on('ready', setAudioReady);
+
   return; // Public API is over here.
+
+  function setAudioReady() {
+    isAudioReady = true;
+  }
 
   function initialize(changes) {
     addAllBoxes(changes);
     centerCameraOnScene();
 
     scene.on('mouseover', highlightOver);
+    scene.on('render', raf);
     App.on('dateChanged', updateChart);
+  }
+
+  function raf() {
+    if (isAudioReady) {
+      updateAudioImpact();
+    }
+  }
+
+  function updateAudioImpact() {
+    var frequency = audio.getByteFrequency();
+    var length = frequency.length;
+    var boxesLength = boxes.length;
+    var boxesPerWave = Math.ceil(boxesLength/length);
+
+    var color = new THREE.Color();
+
+    for (var i = 0; i < length; i++) {
+      var freqValue = frequency[i];
+      var offset = i * boxesPerWave;
+      for (var j = 0; j < boxesPerWave; j++) {
+        var boxIndex = offset + j;
+        color.setHSL(freqValue/255, 1, 0.5);
+        setBoxColor(boxIndex, color.getHex());
+      }
+    }
   }
 
   function updateChart(index) {
     var changes = data.getCurrentDateChanges();
     render(changes, index === 0);
+    if (isAudioReady && (index % 5 === 0)) {
+      showKitten();
+    }
+  }
+
+  function showKitten() {
+    if (kittenThere) return;
+    var container = document.getElementById('three-root');
+    var img = new Image();
+    img.classList.add('kitten');
+    img.src = 'https://raw.githubusercontent.com/anvaka/npmrank.vis/master/images/meow.gif';
+    container.appendChild(img);
+    kittenThere = true;
   }
 
   function highlightOver(shape) {
@@ -87,6 +137,11 @@ function createPlane(scene) {
       var color = getColor(value, minMax.min, minMax.max);
       updateBox(i, value, color);
     }
+  }
+
+  function setBoxColor(i, color) {
+    var box = boxes[i];
+    if (box) box.material.color.setHex(color);
   }
 
   function updateBox(i, height, color) {

@@ -62,6 +62,7 @@ function createScene() {
 
   function render(time) {
     requestAnimationFrame(render);
+    api.fire('render');
 
     hitTest();
     controls.update(2);
