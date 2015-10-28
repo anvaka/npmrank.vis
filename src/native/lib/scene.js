@@ -45,13 +45,35 @@ function createScene() {
   function listenToEvents() {
     controls.on('move', onCameraMove);
     document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('touchstart', onTouchStart, false);
+    document.addEventListener('touchend', onTouchEnd, false);
     window.addEventListener('resize', onWindowResize, false);
   }
 
-  function onDocumentMouseMove(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  function onTouchStart(e) {
+    if (!e.touches || e.touches.length !== 1) {
+      return;
+    }
+
+    setMouseCoordinates(e.touches[0]);
     needHitTest = true;
+  }
+
+  function onTouchEnd(e) {
+    if (e.touches && e.touches.length === 1) {
+      setMouseCoordinates(e.touches[0]);
+    }
+    needHitTest = true;
+  }
+
+  function onDocumentMouseMove(event) {
+    setMouseCoordinates(event);
+    needHitTest = true;
+  }
+
+  function setMouseCoordinates(e) {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   }
 
   function onWindowResize() {
