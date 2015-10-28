@@ -37,6 +37,7 @@ function createScene() {
     var renderer = new THREE.WebGLRenderer();
     var container = document.getElementById('three-root');
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000);
     container.appendChild(renderer.domElement);
     return renderer;
   }

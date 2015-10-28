@@ -3,21 +3,25 @@ var eventify = require('ngraph.events');
 module.exports = createAudioReader;
 
 function createAudioReader() {
-  var audioContext = new window.AudioContext();
-  var analyser = audioContext.createAnalyser();
-  analyser.smoothingTimeConstant = 0.1;
-  analyser.fftSize = 1024;
-  var source, dataArray, bufferLength;
-
-  document.addEventListener('drop', onMP3Drop, false);
-  document.addEventListener('dragover', allowDrop, false);
-
   var api = {
     getByteFrequency: getByteFrequency
   };
   eventify(api);
+  start();
 
   return api;
+
+  function start() {
+    if (!window.AudioContext) return;
+    var audioContext = new window.AudioContext();
+    var analyser = audioContext.createAnalyser();
+    analyser.smoothingTimeConstant = 0.1;
+    analyser.fftSize = 1024;
+    var source, dataArray, bufferLength;
+
+    document.addEventListener('drop', onMP3Drop, false);
+    document.addEventListener('dragover', allowDrop, false);
+  }
 
   function allowDrop(e) {
     e.preventDefault();
