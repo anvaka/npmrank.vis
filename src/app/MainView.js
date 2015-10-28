@@ -3,6 +3,7 @@ import createComponent from './lib/createComponent.js';
 
 import HoverDetails from './HoverDetails.js';
 import GlobalHelp from './GlobalHelp.js';
+import NavButtons from './NavButtons.js';
 
 export default createComponent(model => (
   <div>
@@ -15,5 +16,6 @@ export default createComponent(model => (
       )
     }
     <GlobalHelp isVisible={true}/>
+    <NavButtons />
   </div>
 ));
