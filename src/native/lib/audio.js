@@ -6,6 +6,8 @@ function createAudioReader() {
   var api = {
     getByteFrequency: getByteFrequency
   };
+
+  var source, dataArray, bufferLength, audioContext, analyser;
   eventify(api);
   start();
 
@@ -13,11 +15,10 @@ function createAudioReader() {
 
   function start() {
     if (!window.AudioContext) return;
-    var audioContext = new window.AudioContext();
-    var analyser = audioContext.createAnalyser();
+    audioContext = new window.AudioContext();
+    analyser = audioContext.createAnalyser();
     analyser.smoothingTimeConstant = 0.1;
     analyser.fftSize = 1024;
-    var source, dataArray, bufferLength;
 
     document.addEventListener('drop', onMP3Drop, false);
     document.addEventListener('dragover', allowDrop, false);
